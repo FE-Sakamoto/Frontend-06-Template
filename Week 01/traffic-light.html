@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    .traffic-light {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background-color: #999999;
+      display: inline-block;
+    }
+    .traffic-light:not(:last-child) {
+      margin-right: 20px;
+    }
+    .traffic-light.red.on {
+      background-color: red;
+    }
+    .traffic-light.yellow.on {
+      background-color: yellow;
+    }
+    .traffic-light.green.on {
+      background-color: green;
+    }
+  </style>
+  <title>Document</title>
+</head>
+<body>
+  <div class="traffic-light green"></div>
+  <div class="traffic-light yellow"></div>
+  <div class="traffic-light red"></div>
+  <script>
+    function sleep(time) {
+      return new Promise((resolve) => {
+        setTimeout(resolve, time);
+      });
+    }
+
+    async function changeColor(duration, color) {
+      const trafficLights = document.getElementsByClassName('traffic-light')
+      Array.prototype.forEach.call(trafficLights, (trafficLight)=>{
+        trafficLight.classList.remove('on')
+      })
+      document.getElementsByClassName(color)[0].classList.add('on')
+      await sleep(duration);
+    }
+
+    async function main() {
+      while(true) {
+        await changeColor(10000, "green");
+        await changeColor(2000, "yellow");
+        await changeColor(5000, "red");
+      }
+    }
+    main();
+  </script>
+</body>
+</html>
+

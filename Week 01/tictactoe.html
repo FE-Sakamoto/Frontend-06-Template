@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      #board {
+        width: 300px;
+      }
+      .cell {
+        width: 100px;
+        height: 100px;
+        background-color: green;
+        display: inline-block;
+        vertical-align: middle;
+        border: 1px solid white;
+        box-sizing: border-box;
+
+        font-size: 60px;
+        line-height: 100px;
+        text-align: center;
+      }
+    </style>
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="board">
+      <p>请选择您的棋子:</p>
+      <span onclick="gameBegin('❌')">❌</span>
+      <span onclick="gameBegin('⭕')">⭕</span>
+    </div>
+    <script>
+      let gameOver = false
+      const [EMPTY, CROSS, CIRCLE] = ['', '❌', '⭕']
+      const board = document.getElementById("board");
+      const pattern = [
+        EMPTY, EMPTY, EMPTY, 
+        EMPTY, EMPTY, EMPTY, 
+        EMPTY, EMPTY, EMPTY
+        ];
+      let color = CROSS;
+
+      function userMove(index){
+        if (gameOver) return
+        if (pattern[index]) {
+          return
+        }
+        pattern[index] = color
+        show()
+        checkMoveWin(color)
+        color = toggleColor(color)
+        superSmartPerfectPlusProAI_AKA_AlphaCatMove()
+      }
+
+      function superSmartPerfectPlusProAI_AKA_AlphaCatMove() {
+        if (gameOver) return
+        let choice = bestChoice(pattern, color)
+        if (choice.point !== null) {
+          pattern[choice.point] = color
+        } else {
+          alert('和棋!')
+        }
+        show()
+        checkMoveWin(color)
+        color = toggleColor(color)
+      }
+
+      function bestChoice(_pattern, _color){
+        let point
+        // 我要赢了!!
+        if ((point = willWin(_pattern, _color)) !== null) {
+          return {
+            point,
+            result: 1
+          }
+        }
+
+        // 我不能输
+        if ((point = willWin(_pattern, toggleColor(_color))) !== null) {
+          return {
+            point,
+            result: 0
+          }
+        }
+        let result = -2
+        for (let i = 0; i < _pattern.length; i++) {
+          if (_pattern[i]) continue
+          const tmp = Object.create(_pattern)
+          tmp[i] = _color
+          const opp = bestChoice(tmp, toggleColor(color))
+          if (-opp.result >= result) {
+            point = opp.point
+            result = -opp.result
+          }
+          if (result === 1) break
+        }
+
+        return {
+          point,
+          result: point? result : 0
+        }
+      }
+
+      function willWin(_pattern, _color) {
+        for (let i = 0; i < _pattern.length; i++) {
+          if (_pattern[i]) continue
+          const tmp = Object.create(_pattern)
+          tmp[i] = _color
+          if (checkWin(tmp, _color)) {
+            return i
+          }
+        }
+        return null
+      }
+
+      function checkWin(_pattern, _color){
+        return [
+          [0, 1, 2],
+          [3, 4, 5],
+          [6, 7, 8],
+
+          [0, 3, 6],
+          [1, 4, 7],
+          [2, 5, 8],
+
+          [0, 4, 8],
+          [6, 4, 2],
+        ].some(line=>line.every(index => _pattern[index] === _color))
+      }
+
+      function checkMoveWin(_color){
+        if (checkWin(pattern, _color)) {
+          setTimeout(()=>{alert(_color + ' is winner!')}, 0)
+          gameOver = true
+        }
+      }
+
+      function congratulate(){
+        if (checkWin(pattern, color)) {
+          gameOver = true
+          alert(color + ' is winner!')
+        }
+      }
+
+      function toggleColor(color) {
+        return color === CIRCLE? CROSS : CIRCLE;
+      }
+
+      function show() {
+        board.innerHTML = "";
+        for (let i = 0; i < pattern.length; i++) {
+          const cell = document.createElement('div');
+          cell.classList.add('cell')
+          cell.innerText = pattern[i];
+          cell.addEventListener('click', ()=>{
+            userMove(i)
+          })
+          board.appendChild(cell);
+        }
+      }
+      function gameBegin(_color){
+        const board = document.getElementById('board');
+        board.innerHTML = ''
+        if (_color === '⭕') {
+          superSmartPerfectPlusProAI_AKA_AlphaCatMove(pattern, color)
+        }
+        show()
+      }
+    </script>
+  </body>
+</html>
