@@ -24,11 +24,7 @@
     <title>Document</title>
   </head>
   <body>
-    <div id="board">
-      <p>请选择您的棋子:</p>
-      <span onclick="gameBegin('❌')">❌</span>
-      <span onclick="gameBegin('⭕')">⭕</span>
-    </div>
+    <div id="board"></div>
     <script>
       let gameOver = false
       const [EMPTY, CROSS, CIRCLE] = ['', '❌', '⭕']
@@ -49,10 +45,10 @@
         show()
         checkMoveWin(color)
         color = toggleColor(color)
-        superSmartPerfectPlusProAI_AKA_AlphaCatMove()
+        superSmartPerfectAI_AKA_AlphaCatProPlusMove()
       }
 
-      function superSmartPerfectPlusProAI_AKA_AlphaCatMove() {
+      function superSmartPerfectAI_AKA_AlphaCatProPlusMove() {
         if (gameOver) return
         let choice = bestChoice(pattern, color)
         if (choice.point !== null) {
@@ -158,14 +154,8 @@
           board.appendChild(cell);
         }
       }
-      function gameBegin(_color){
-        const board = document.getElementById('board');
-        board.innerHTML = ''
-        if (_color === '⭕') {
-          superSmartPerfectPlusProAI_AKA_AlphaCatMove(pattern, color)
-        }
-        show()
-      }
+
+      show()
     </script>
   </body>
 </html>
