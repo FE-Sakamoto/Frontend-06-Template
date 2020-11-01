@@ -28,11 +28,23 @@ TicTacToe的课程中学习到了用递归的方式模拟双方交替落子来�
 
 ## 0x02 异步编程
 
-结合[Promise里的代码为什么比setTimeout先执行？](https://time.geekbang.org/column/article/82764)写了篇[博客](https://github.com/ycy2077/blog/issues/8)
+结合[重学前端-Promise里的代码为什么比setTimeout先执行？](https://time.geekbang.org/column/article/82764)写了篇[博客](https://github.com/ycy2077/blog/issues/8)
 
 
 
-## 0x03 五子棋
+## 0x03 面向对象
+
+博客如下:
+
+[重学前端-JS-类型](https://github.com/ycy2077/blog/issues/4)
+
+[重学前端-JS-你知道全部的对象分类吗](https://github.com/ycy2077/blog/issues/7)
+
+[重学前端-JS-我们真的需要模拟类吗？](https://github.com/ycy2077/blog/issues/6)
+
+[https://github.com/ycy2077/blog/issues/5](https://github.com/ycy2077/blog/issues/5)
+
+## 0x04 五子棋
 
 读了[五子棋AI教程](https://github.com/lihongxun945/myblog/issues/11)的文章学习AI编程思路,了解了`Max` `Min` 树和`alpha` `beta`剪枝方法,但是截至目前并不能自主实现编程,继续尝试.
 
