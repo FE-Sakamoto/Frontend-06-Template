@@ -42,7 +42,7 @@ TicTacToe的课程中学习到了用递归的方式模拟双方交替落子来�
 
 [重学前端-JS-我们真的需要模拟类吗？](https://github.com/ycy2077/blog/issues/6)
 
-[https://github.com/ycy2077/blog/issues/5](https://github.com/ycy2077/blog/issues/5)
+[重学前端-JS-面向对象还是基于对象?](https://github.com/ycy2077/blog/issues/5)
 
 ## 0x04 五子棋
 
