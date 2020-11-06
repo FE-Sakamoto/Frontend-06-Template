@@ -26,14 +26,13 @@
       const SIZE = 100
       let mousedown = false
       let clear = false
-      let map = localStorage.getItem('map') ? JSON.parse(localStorage.getItem('map')) : Array(SIZE * SIZE).fill(0)
+      const map = localStorage.getItem('map') ? JSON.parse(localStorage.getItem('map')) : Array(SIZE * SIZE).fill(0)
       const container = document.getElementById('container')
 
       class MinHeap {
-        constructor(data, compare) {
+        constructor(compare) {
           this.compare = compare || ((a, b)=>a - b)
           this.data = [null]
-          data.forEach(i => this.push(i))
         }
 
         get length() {
@@ -117,9 +116,10 @@
 
       async function path(map, start, end) {
         const tmp = Object.create(map)
-        const queue = new MinHeap([start], (a, b) => distance(a) - distance(b))
-
-        function distance(point) {
+        const queue = new MinHeap((a, b) => getDistanceToEnd(a) - getDistanceToEnd(b))
+        start.distanceToStart = 0
+        queue.push(start)
+        function getDistanceToEnd(point) {
           return (point[0] - end[0]) ** 2 + (point[1] - end[1]) ** 2
         }
 
@@ -127,10 +127,20 @@
           const [x, y] = point
           const index = x + SIZE * y
           if (x < 0 || x >= SIZE || y < 0 || y >= SIZE) return
-          if (tmp[index]) return
+          if (tmp[index] === 1) return // 墙
+          if (typeof tmp[index] === 'object') { // 更新pre
+            if (pre.distanceToStart < tmp[index].distanceToStart) {
+              tmp[index] = pre
+              point.distanceToStart = pre.distanceToStart + 1
+              queue.push(point)
+            }
+            return
+          }
           tmp[index] = pre
-          container.children[index].style.backgroundColor = 'lightgreen'
+          point.distanceToStart = pre.distanceToStart + 1
           queue.push(point)
+
+          container.children[index].style.backgroundColor = 'lightgreen'
         }
 
         while (queue.length) {
@@ -151,6 +161,11 @@
           await insert([x - 1, y], point)
           await insert([x, y + 1], point)
           await insert([x, y - 1], point)
+
+          await insert([x + 1, y + 1], point)
+          await insert([x + 1, y - 1], point)
+          await insert([x - 1, y + 1], point)
+          await insert([x - 1, y - 1], point)
         }
         return null
       }
