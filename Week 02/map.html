@@ -147,6 +147,7 @@
           const point = queue.pop()
           const [x, y] = point
           if (x === end[0] && y === end[1]) {
+            alert('the distance from start to end is ' + point.distanceToStart)
             let way = end
             while (!(way[0] === start[0] && way[1] === start[1])) {
               const index = way[0] + way[1] * SIZE
