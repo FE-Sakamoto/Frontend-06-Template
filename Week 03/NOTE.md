@@ -100,6 +100,8 @@ graph TB;
 
 
 
+![image-20201117155244752](https://tva1.sinaimg.cn/large/0081Kckwly1gks810ondcj30m50dkjs5.jpg)
+
 如下代码可以遍历AST输出计算结果(完整效果见index.html)
 
 ```js
