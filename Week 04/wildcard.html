@@ -13,12 +13,13 @@
           return false
         }
       }
+      return true
     }
 
     let i = 0
     let lastIndex = 0
 
-    for (; pattern[i] !== '*'; i++) {
+    for (i = 0; pattern[i] !== '*'; i++) {
       if (pattern[i] !== source[i] && pattern[i] !== '?') {
         return false
       }
@@ -45,7 +46,7 @@
     }
 
     for (let j = 0; j <= source.length - lastIndex && pattern[pattern.length - j] !== '*'; j++) {
-      if (pattern[pattern.length - 1] !== source[source.length - j] && pattern[pattern.length - j] !== '?')  {
+      if (pattern[pattern.length - j] !== source[source.length - j] && pattern[pattern.length - j] !== '?')  {
         return false
       }
     }
