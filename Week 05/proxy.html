@@ -1,0 +1,62 @@
+<input type="range" id='r' min="0" max="255" />
+<input type="range" id='g' min="0" max="255" />
+<input type="range" id='b' min="0" max="255" />
+<div id="color" style="width: 100px; height: 100px;"/>
+
+<script>
+  const callbacks = new Map()
+  const reactivties = new Map()
+  let usedReactivties = []
+
+  function effect(callback) {
+    usedReactivties = []
+    callback()
+    for (reactivity of usedReactivties) {
+      if (!callbacks.has(reactivity[0])) {
+        callbacks.set(reactivity[0], new Map())
+      }
+      if (!callbacks.has(reactivity[1])) {
+        callbacks.get(reactivity[0]).set(reactivity[1], [])
+      }
+      callbacks.get(reactivity[0]).get(reactivity[1]).push(callback)
+    }
+  }
+
+  function reactive(object) {
+    if (reactivties.has(object)) return reactivties.get(object)
+    return new Proxy(object, {
+      set(object, prop, value) {
+        object[prop] = value
+        if (callbacks.has(object) && callbacks.get(object).has(prop)) {
+          for (let callback of callbacks.get(object).get(prop)) {
+            callback()
+          }
+        }
+        return object[prop]
+      },
+      get(object, prop) {
+        usedReactivties.push([object, prop])
+        if (object[prop] !== null && typeof object[prop] === 'object') {
+          return reactive(object[prop])
+        }
+        return object[prop]
+      }
+    })
+  }
+
+
+
+  const po = reactive({
+    r: 0,
+    g: 0,
+    b: 0
+  })
+  effect(()=>{document.getElementById('r').value = po.r})
+  effect(()=>{document.getElementById('g').value = po.g})
+  effect(()=>{document.getElementById('b').value = po.b})
+  effect(()=>{document.getElementById('color').style.background = `rgb(${po.r}, ${po.g}, ${po.b})`})
+  document.getElementById('r').addEventListener('input', event => po.r = event.target.value)
+  document.getElementById('g').addEventListener('input', event => po.g = event.target.value)
+  document.getElementById('b').addEventListener('input', event => po.b = event.target.value)
+  
+</script>

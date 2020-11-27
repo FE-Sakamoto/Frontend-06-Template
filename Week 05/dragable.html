@@ -1,0 +1,56 @@
+<div id="container">
+  文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+  文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+  文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+  文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+  文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+</div>
+<div id="dragable" style="display: inline-block; width: 100px;height: 100px;background-color: pink;"/>
+<script>
+  const dragable = document.getElementById('dragable')
+  let baseX = 0
+  let baseY = 0
+  dragable.addEventListener('mousedown', event=>{
+    let startX = event.clientX
+    let startY = event.clientY
+    let up = event => {
+      baseX += event.clientX - startX
+      baseY += event.clientY - startY
+      document.removeEventListener('mousemove', move)
+      document.removeEventListener('mouseup', up)
+    }
+    let move = event => {
+      const range = getNearest(event.clientX, event.clientY)
+      range.insertNode(dragable)
+    }
+    document.addEventListener('mousemove', move)
+    document.addEventListener('mouseup', up)
+  })
+
+  const container = document.getElementById('container')
+  const ranges = []
+  for (let i = 0; i < container.childNodes[0].length; i++) {
+    const range = document.createRange()
+    range.setStart(container.childNodes[0], i)
+    range.setEnd(container.childNodes[0], i)
+    ranges.push(range)
+  }
+
+  function getNearest(x, y) {
+    let min = Infinity
+    let nearest = null
+    for (let range of ranges) {
+      const rect = range.getBoundingClientRect()
+      const distance = (rect.x - x) ** 2 + (rect.y - y) ** 2
+      if (distance < min) {
+        min = distance
+        nearest = range
+      }
+    }
+    return nearest
+  }
+
+  document.addEventListener('selectstart', event => event.preventDefault())
+
+
+</script>
