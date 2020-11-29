@@ -32,7 +32,7 @@
   for (let i = 0; i < container.childNodes[0].length; i++) {
     const range = document.createRange()
     range.setStart(container.childNodes[0], i)
-    range.setEnd(container.childNodes[0], i)
+    // range.setEnd(container.childNodes[0], i) // TODO: 此行代码的必要性?
     ranges.push(range)
   }
 
