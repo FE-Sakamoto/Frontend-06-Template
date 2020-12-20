@@ -10,7 +10,7 @@ http.createServer((request, response)=>{
     body.push(chunk.toString())
   })
   .on('end', ()=>{
-    body = Buffer.concat(body).toString()
+    body = (Buffer.concat([ Buffer.from(body.toString()) ])).toString();
     console.log('body:', body)
     response.writeHead('200', {'Content-Type': 'text/html'})
     response.end(' Hello world\n')
