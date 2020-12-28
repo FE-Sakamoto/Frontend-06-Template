@@ -12,7 +12,47 @@ let currentTextNode = null;
 const rules = []
 function addCSSRules(text) {
   const ast = css.parse(text)
-  rules.push({...ast.stylesheet.rules})
+  rules.push(...ast.stylesheet.rules)
+}
+
+function match(element, selector) {
+  console.log(selector)
+  if (element.type === 'text') return false
+
+  if (selector.charAt(0) === '#') {
+    return element.attributes.some(attribute => attribute.name === 'id' && attribute.value === selector.slice(1))
+  } else if (selector.charAt(0) === '.') {
+    return element.attributes.some(attribute => attribute.name === 'class' && attribute.value === selector.slice(1))
+  } else {
+    if (element.tagName === selector) {
+      return true
+    }
+  }
+
+  return false
+}
+
+function computeCSS(element) {
+  const elements = stack.slice().reverse()
+  
+  if (!element.computedStyle) element.computedStyle = {}
+
+  for (let rule of rules) {
+    const selectorParts = rule.selectors[0].split(' ').reverse()
+
+    if (!match(element, selectorParts[0])) continue
+
+    let j = 1
+    for (let i = 0; i < elements.length & j < selectorParts.length; i++) {
+      if (match(elements[i], selectorParts[j])) j++
+    }
+
+    const matched = j >= selectorParts.length
+
+    if (matched) {
+      console.log('Element', element, 'matched rule', rule)
+    }
+  }
 }
 
 const stack = [{ type: "document", children: [] }];
@@ -28,6 +68,8 @@ function emit(token) {
 
     element.tagName = token.tagName;
     element.attributes = token.attributes;
+
+    computeCSS(element)
 
     top.children.push(element);
     element.parent = top;
