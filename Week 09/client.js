@@ -215,5 +215,5 @@ void async function(){
   })
 
   const response = await request.send()
-  const dom = parser.parseHTML(response.body)
+  parser.parseHTML(response.body)
 }()

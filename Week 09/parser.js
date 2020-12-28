@@ -15,8 +15,29 @@ function addCSSRules(text) {
   rules.push(...ast.stylesheet.rules)
 }
 
+function specificity(selector) {
+  const p = [0, 0, 0, 0]
+  const selectorParts = selector.split(' ')
+  for (let part of selectorParts) {
+    if (part.charAt(0) === '#') {
+      p[1] += 1
+    } else if (part.charAt(0) === '.') {
+      p[2] += 1
+    } else {
+      p[3] += 1
+    }
+  }
+  return p
+}
+
+function compare(sp1, sp2) {
+  if (sp1[0] - sp1[0]) return sp1[0] - sp2[0]
+  if (sp1[1] - sp2[1]) return sp1[1] - sp2[1]
+  if (sp1[2] - sp2[2]) return sp1[2] - sp2[2]
+  return sp1[3] - sp2[3]
+}
+
 function match(element, selector) {
-  console.log(selector)
   if (element.type === 'text') return false
 
   if (selector.charAt(0) === '#') {
@@ -50,12 +71,22 @@ function computeCSS(element) {
     const matched = j >= selectorParts.length
 
     if (matched) {
-      console.log('Element', element, 'matched rule', rule)
+      const sp = specificity(rule.selectors[0])
+      const computedStyle = element.computedStyle
+      for (let declaration of rule.declarations) {
+        const property = computedStyle[declaration.property] || {}
+        computedStyle[declaration.property] = property
+
+        if (!property.specificity || compare(sp, property.specificity) >= 0) {
+          property.value = declaration.value
+          property.specificity = sp
+        }
+      }
     }
   }
 }
 
-const stack = [{ type: "document", children: [] }];
+const stack = [{ type: "document", children: [], attributes: [] }];
 
 function emit(token) {
   let top = stack[stack.length - 1];
@@ -99,9 +130,8 @@ function emit(token) {
         content: ''
       }
       top.children.push(currentTextNode)
-    } else {
-      currentTextNode.content += token.content
-    }
+    } 
+    currentTextNode.content += token.content
   }
 }
 
@@ -452,4 +482,5 @@ module.exports.parseHTML = function parseHTML(html) {
     state = state(c) || state;
   }
   state = state(EOF);
+  return stack[0]
 };
