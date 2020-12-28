@@ -1,0 +1,15 @@
+{
+  "name": "week-09",
+  "version": "1.0.0",
+  "description": "",
+  "main": "client.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "ycy2077 <bugmaker.yu@gmail.com> (https://github.com/ycy2077)",
+  "license": "MIT",
+  "dependencies": {
+    "css": "^3.0.0"
+  }
+}
