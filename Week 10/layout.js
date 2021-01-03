@@ -25,6 +25,7 @@ function layout(element) {
 
   items.sort((a, b) => (a.order || 0) - (b.order || 0));
 
+  // 添加默认样式
   (['width', 'height']).forEach(size => {
     if (style[size] === 'auto' || style[size] === '') {
       style[size] === null
@@ -37,6 +38,7 @@ function layout(element) {
   if (!style.flexWrap || style.flexWrap === 'auto') style.flexWrap = 'nowrap'
   if (!style.alignContent || style.alignContent === 'auto') style.alignContent = 'stretch'
 
+  // 初始化辅助变量
   let mainSize, mainStart, mainEnd, mainSign, mainBase, crossSize, crossStart, crossEnd, crossSign, crossBase
 
   if (style.filexDirection === 'row') {
@@ -93,6 +95,7 @@ function layout(element) {
     crossSign = 1
   }
 
+  // 主轴计算
   let isAutoMainSize = false
   if (!style[mainSize]) {
     style[mainSize] = 0
@@ -155,7 +158,7 @@ function layout(element) {
     flexLine.crossSpace = crossSpace
   }
 
-  if (mainSpace < 0) { // style[mainSize] !== 0 && flexWrap === 'nowrap' && sum(item.style[mainSize]) > style[mainSize]
+  if (mainSpace < 0) {
     const scale = style[mainSize] / (style[mainSize] - mainSpace)
     let currentMain = mainBase
     for (let item of items) {
