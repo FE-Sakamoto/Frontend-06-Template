@@ -1,0 +1,313 @@
+<html>
+  <div id='api-list'></div>
+  <script>
+    let apis = Object.getOwnPropertyNames(window)
+    const list = document.getElementById('api-list')
+
+    function filter(f) {
+      const arr1 = []
+      const arr2 = []
+      for (let i = 0; i < apis.length; i++) {
+        const api = apis[i]
+        if (f(api)) {
+          arr1.push(api)
+        } else {
+          arr2.push(api)
+        }
+      }
+      apis = arr2
+      return arr1
+    }
+
+    function appendSubList(typeName, items) {
+      const subList = document.createElement('ol')
+      const title = document.createElement('span')
+      title.innerText = `${typeName} (${items.length})`
+      subList.appendChild(title)
+      list.appendChild(subList)
+      for (let i = 0; i < items.length; i++) {
+        const item = document.createElement('li')
+        item.innerText = items[i]
+        subList.appendChild(item)
+      }
+    }
+    { // ECMA 262
+      const set = new Set(["globalThis", "console", "BigInt", "BigInt64Array", "BigUint64Arry", "Infinity", "NaN", "undefined", "eval", "isFinite", "isNaN", "parseFloat", "parseInt", "decodeURI", "decodeURIComponent", "encodeURI", "encodeURIComponent", "Array", "Date", "RegExp", "Promise", "Proxy", "Map", "WeakMap", "Set", "WeakSet", "Function", "Boolean", "String", "Number", "Symbol", "Object", "Error", "EvalError", "RangeError", "ReferenceError", "SyntaxError", "TypeError", "URIError", "ArrayBuffer", "SharedArrayBuffer", "DataView", "Float32Array", "Float64Array", "Int8Array", "Int16Array", "Int32Array", "Uint8Array", "Uint16Array", "Uint32Array", "Uint8ClampedArray", "Atomics", "JSON", "Math", "Reflect", "escape", "unescape"])
+      appendSubList('ECMA 262', filter((api)=>set.has(api)))
+    }
+
+    { // Subclass of Node
+      appendSubList('Subclass of Node', filter(api => {
+        return api === 'Node' || (window[api] && window[api].prototype  instanceof Node)
+      }))
+    }
+
+    { // event
+      appendSubList('events', filter(api => {
+        return api.match(/^on/)
+      }))
+    }
+
+    { // webkit private
+      appendSubList('webkit private', filter(api => {
+        return api.match(/^webkit/i)
+      }))
+    }
+
+
+    { // ecma-402
+      appendSubList('ecma-402', filter(api=>api === 'Intl'))
+    }
+
+    { // webgl
+      appendSubList('webgl', filter(api=>api.match(/^webgl/i)))
+    }
+
+
+    { // w3/webaudio
+      const set = new Set(["BaseAudioContext", "AudioContext", "offlineAudioContext", "AudioBuffer", "AudioNode", "AudioParam", "AudioScheduledSourceNode", "AnalyserNode", "AudioBuffSourceNode", "AudioDestinationNode", "AudioListener", "AudioProcessingEvent", "BiquadFilterNode", "ChannelMergerNode", "ChannelSplitterNode", "ConstantSourceNode", "ConvolverNode", "DelayNode", "DynamicsCompressorNode", "GainNode", "IIRFilterNode", "MediaElementAudioSourceNode", "MediaStreamAudioDestinationNode", "MediaStreamAudioSourceNode", "MediaStreamTrackAudioSourceNode", "OscillatorNode", "PannerNode", "PeriodicWave", "ScriptProcessorNode", "StereoPannerNode", "WaveShaperNode", "AudioWorklet"])
+      appendSubList('w3/webaudio', filter((api)=>set.has(api)))
+    }
+
+    { // w3/Navigation Timing 
+      appendSubList('w3/Navigation Timing ', filter((api)=>api.match(/^performance/i)))
+    }
+
+    { // w3/webRTC
+      appendSubList('w3/webaudio', filter((api)=>api.match(/^RTC/)))
+    }
+
+    { // w3/SVG
+      appendSubList('w3/SVG', filter((api)=>api.match(/^SVG/)))
+    }
+
+    { // whatwg window
+      const set = new Set(["BigInt", "BigInt64Array", "BigUint64Array", "Infinity", "NaN", "undefined", "eval", "isFinite", "isNaN", "parseFloat", "parseInt", "decodeURI", "decodeURIComponent", "encodeURI", "encodeURIComponent", "Array", "Date", "RegExp", "Promise", "Proxy", "Map", "WeakMap", "Set", "WeakSet", "Function", "Boolean", "String", "Number", "Symbol", "Object", "Error", "EvalError", "RangeError", "ReferenceError", "SyntaxError", "TypeError", "URIError", "ArrayBuffer", "SharedArrayBuffer", "DataView", "Float32Array", "Float64Array", "Int8Array", "Int16Array", "Int32Array", "Uint8Array", "Uint16Array", "Uint32Array", "Uint8ClampedArray", "Atomics", "JSON", "Math", "Reflect", "escape", "unescape", "AudioTrack",
+            "AudioTrackList",
+            "BarProp",
+            "BeforeUnloadEvent",
+            "BroadcastChannel",
+            "CanvasGradient",
+            "CanvasPattern",
+            "CanvasRenderingContext2D",
+            "CloseEvent",
+            "CustomElementRegistry",
+            "DOMParser",
+            "DOMStringList",
+            "DOMStringMap",
+            "DataTransfer",
+            "DataTransferItem",
+            "DataTransferItemList",
+            "DedicatedWorkerGlobalScope",
+            "Document",
+            "DragEvent",
+            "ElementInternals",
+            "ErrorEvent",
+            "EventSource",
+            "External",
+            "FormDataEvent",
+            "HTMLAllCollection",
+            "HTMLAnchorElement",
+            "HTMLAreaElement",
+            "HTMLAudioElement",
+            "HTMLBRElement",
+            "HTMLBaseElement",
+            "HTMLBodyElement",
+            "HTMLButtonElement",
+            "HTMLCanvasElement",
+            "HTMLDListElement",
+            "HTMLDataElement",
+            "HTMLDataListElement",
+            "HTMLDetailsElement",
+            "HTMLDialogElement",
+            "HTMLDirectoryElement",
+            "HTMLDivElement",
+            "HTMLElement",
+            "HTMLEmbedElement",
+            "HTMLFieldSetElement",
+            "HTMLFontElement",
+            "HTMLFormControlsCollection",
+            "HTMLFormElement",
+            "HTMLFrameElement",
+            "HTMLFrameSetElement",
+            "HTMLHRElement",
+            "HTMLHeadElement",
+            "HTMLHeadingElement",
+            "HTMLHtmlElement",
+            "HTMLIFrameElement",
+            "HTMLImageElement",
+            "HTMLInputElement",
+            "HTMLLIElement",
+            "HTMLLabelElement",
+            "HTMLLegendElement",
+            "HTMLLinkElement",
+            "HTMLMapElement",
+            "HTMLMarqueeElement",
+            "HTMLMediaElement",
+            "HTMLMenuElement",
+            "HTMLMetaElement",
+            "HTMLMeterElement",
+            "HTMLModElement",
+            "HTMLOListElement",
+            "HTMLObjectElement",
+            "HTMLOptGroupElement",
+            "HTMLOptionElement",
+            "HTMLOptionsCollection",
+            "HTMLOutputElement",
+            "HTMLParagraphElement",
+            "HTMLParamElement",
+            "HTMLPictureElement",
+            "HTMLPreElement",
+            "HTMLProgressElement",
+            "HTMLQuoteElement",
+            "HTMLScriptElement",
+            "HTMLSelectElement",
+            "HTMLSlotElement",
+            "HTMLSourceElement",
+            "HTMLSpanElement",
+            "HTMLStyleElement",
+            "HTMLTableCaptionElement",
+            "HTMLTableCellElement",
+            "HTMLTableColElement",
+            "HTMLTableElement",
+            "HTMLTableRowElement",
+            "HTMLTableSectionElement",
+            "HTMLTemplateElement",
+            "HTMLTextAreaElement",
+            "HTMLTimeElement",
+            "HTMLTitleElement",
+            "HTMLTrackElement",
+            "HTMLUListElement",
+            "HTMLUnknownElement",
+            "HTMLVideoElement",
+            "HashChangeEvent",
+            "History",
+            "ImageBitmap",
+            "ImageBitmapRenderingContext",
+            "ImageData",
+            "Location",
+            "MediaError",
+            "MessageChannel",
+            "MessageEvent",
+            "MessagePort",
+            "MimeType",
+            "MimeTypeArray",
+            "Navigator",
+            "OffscreenCanvas",
+            "OffscreenCanvasRenderingContext2D",
+            "PageTransitionEvent",
+            "Path2D",
+            "Plugin",
+            "PluginArray",
+            "PopStateEvent",
+            "PromiseRejectionEvent",
+            "RadioNodeList",
+            "SharedWorker",
+            "SharedWorkerGlobalScope",
+            "Storage",
+            "StorageEvent",
+            "SubmitEvent",
+            "TextMetrics",
+            "TextTrack",
+            "TextTrackCue",
+            "TextTrackCueList",
+            "TextTrackList",
+            "TimeRanges",
+            "TrackEvent",
+            "ValidityState",
+            "VideoTrack",
+            "VideoTrackList",
+            "WebSocket",
+            "Window",
+            "Worker",
+            "WorkerGlobalScope",
+            "WorkerLocation",
+            "WorkerNavigator",
+            "Worklet",
+            "WorkletGlobalScope",
+        ])
+      appendSubList('whatwg/window', filter((api)=>set.has(api)))
+    }
+
+    { // whatwg dom-textencoder
+      const set = new Set(["TextDecoder", "TextEncoder", "TextDecoderStream", "TextEncoderStream"])
+      appendSubList('whatwg/dom-textencoder', filter((api)=>set.has(api)))
+    }
+
+    { // whatwg dom
+      appendSubList('whatwg/dom', filter((api)=>api.match(/^DOM/)))
+    }
+
+    { // whatwg blqs-class
+      const set = new Set(["ReadableStream", "ReadableStreamDefaultReader", "ReadableStreamBYOBReader", "ReadableStreamDefaultController", "ReadableByteStreamController", "ReadableStreamBYOBRequest", "WritableStream", "WritableStreamDefaultWriter", "WritableStreamDefaultController", "TransformStream", "TransformStreamDefaultController", "ByteLengthQueuingStrategy", "CountQueuingStrategy"])
+      appendSubList('whatwg/blqs-class', filter((api)=>set.has(api)))
+    }
+
+    { // sync-manager-interface
+      const set = new Set(["SyncManager"])
+      appendSubList('sync-manager-interface', filter((api)=>set.has(api)))
+    }
+
+    { // xml
+      appendSubList('xml', filter(api => api.match(/^(XPath)|(XML)/)))
+    }
+
+    { // csswg/cssom
+      appendSubList('csswg/cssom', filter(api => api.match(/^(CSS)|(Style)/)))
+    }
+
+    { // w3/indexedDB
+      appendSubList('w3/indexedDB', filter(api => api.match(/^IDB/)))
+    }
+
+    { // w3/mediacapture
+      appendSubList('w3/mediacapture', filter(api => api.match(/^Media/)))
+    }
+
+    { // w3/payment-reques
+      appendSubList('w3/payment-reques', filter(api => api.match(/^Payment/)))
+    }
+
+    { // w3/webauthn
+      appendSubList('w3/webauthn', filter(api => api.match(/^Authenticator/)))
+    }
+
+    { // w3/geolocation
+      appendSubList('w3/geolocation', filter(api => api.match(/^Geolocation/)))
+    }
+
+    { // w3/presentation
+      appendSubList('w3/presentation', filter(api => api.match(/^Presentation/)))
+    }
+
+    { // webaudio/web-midi-api
+      appendSubList('webaudio/web-midi-api', filter(api => api.match(/^MIDI/)))
+    }
+
+    { // w3 community group/web-usb
+      appendSubList('w3 community group/web-usb', filter(api => api.match(/^USB/)))
+    }
+
+    { // w3 community group/web-bluetooth
+      appendSubList('w3 community group/web-bluetooth', filter(api => api.match(/^Bluetooth/)))
+    }
+
+    { // w3 community group/webxr
+      appendSubList('w3 community group/webxr', filter(api => api.match(/^XR/)))
+    }
+
+    { // w3 community group/file-system
+      appendSubList('w3 community group/file-system', filter(api => api.match(/^FileSystem/)))
+    }
+
+
+    console.log(apis)
+
+    {
+      appendSubList('others', filter(()=> true))
+    }
+
+
+
+  </script>
+</html>
