@@ -10,25 +10,51 @@ export function createElement(type, props, ...children) {
     element.setAttribute(name, props[name])
   }
 
-  for (let child of children) {
-    if (typeof child === 'string') {
-      element.appendChild(new TextWrapper(child))
-    } else {
-      element.appendChild(child)
+  function processChildren (children) {
+    for (let child of children) {
+      if (Array.isArray(child)) {
+        processChildren(child)
+        continue
+      }
+      if (typeof child === 'string') {
+        element.appendChild(new TextWrapper(child))
+      } else {
+        element.appendChild(child)
+      }
     }
   }
+  
+  processChildren(children)
+
   return element
 }
 
+export const STATE = Symbol('state')
+export const ATTRIBUTE = Symbol('attribute')
+
 export class Component {
+  constructor() {
+    this[ATTRIBUTE] = Object.create(null)
+    this[STATE] = Object.create(null)
+  }
+  render() {
+    return this.root
+  }
   mountTo(parent) {
+    if (!this.root) {
+      this.render()
+    }
     parent.appendChild(this.root)
   }
   setAttribute(name, value) {
-    this.root.setAttribute(name, value)
+    this[ATTRIBUTE][name] = value
   }
   appendChild(child) {
+    if (!this.root) this.render()
     child.mountTo(this.root)
+  }
+  triggerEvent(type, args) {
+    this[ATTRIBUTE]['on' + type.replace(/^[\s\S]/, s => s.toUpperCase())](new CustomEvent(type, {detail: args}))
   }
 }
 
@@ -37,6 +63,9 @@ class ElementWrapper extends Component {
     super()
     this.root = document.createElement(type)
   }
+  setAttribute(name, value) {
+    this.root.setAttribute(name, value);
+}
 }
 
 class TextWrapper extends Component  {
