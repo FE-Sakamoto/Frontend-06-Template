@@ -240,10 +240,8 @@ function tagName(c) {
     parseError(
       `This is an unexpected-null-character parse error. Append a U+FFFD REPLACEMENT CHARACTER character to the current tag token's tag name.`
     );
-    return;
   } else if (c === EOF) {
     parseError(`This is an eof-in-tag parse error. Emit an end-of-file token.`);
-    return;
   } else {
     currentToken.tagName += c;
     return tagName;
@@ -262,7 +260,6 @@ function beforeAttributeName(c) {
     parseError(
       `This is an unexpected-equals-sign-before-attribute-name parse error. Start a new attribute in the current tag token. Set that attribute's name to the current input character, and its value to the empty string. Switch to the attribute name state.`
     );
-    return;
   } else {
     currentAttribute = {
       name: "",
@@ -287,12 +284,10 @@ function attributeName(c) {
     parseError(
       `This is an unexpected-null-character parse error. Append a U+FFFD REPLACEMENT CHARACTER character to the current attribute's name.`
     );
-    return;
   } else if (c === '"' || c === "'" || c === "<") {
     parseError(
       `This is an unexpected-character-in-attribute-name parse error. Treat it as per the "anything else" entry below.`
     );
-    return;
   } else {
     currentAttribute.name += c;
     return attributeName;
@@ -315,7 +310,6 @@ function afterAttributeName(c) {
     return data;
   } else if (c === EOF) {
     parseError(`This is an eof-in-tag parse error. Emit an end-of-file token.`);
-    return;
   } else {
     currentToken.attributes.push(currentAttribute);
     currentAttribute = {
@@ -340,7 +334,6 @@ function beforeAttributeValue(c) {
     parseError(
       `This is a missing-attribute-value parse error. Switch to the data state. Emit the current tag token.`
     );
-    return;
   } else {
     return unQuotedAttributeValue(c);
   }
@@ -355,12 +348,10 @@ function doubleQuotedAttributeValue(c) {
     return afterQuotedAttributeValue;
   } else if (c === "&") {
     dontSupport();
-    return;
   } else if (c === NULL) {
     parseError(
       `This is an unexpected-null-character parse error. Append a U+FFFD REPLACEMENT CHARACTER character to the current attribute's value.`
     );
-    return;
   } else if (c === EOF) {
     parseError(`This is an eof-in-tag parse error. Emit an end-of-file token.`);
   } else {
@@ -399,7 +390,6 @@ function unQuotedAttributeValue(c) {
     return beforeAttributeName;
   } else if (c === "&") {
     dontSupport();
-    return;
   } else if (c === ">") {
     currentToken.attributes.push(currentAttribute);
     emit(currentToken);
@@ -408,15 +398,12 @@ function unQuotedAttributeValue(c) {
     parseError(
       `This is an unexpected-null-character parse error. Append a U+FFFD REPLACEMENT CHARACTER character to the current attribute's value.`
     );
-    return;
   } else if (c === '"' || c === "'" || c === "<" || c === "=" || c === "`") {
     parseError(
       `This is an unexpected-character-in-unquoted-attribute-value parse error. Treat it as per the "anything else" entry below.`
     );
-    return;
   } else if (c === EOF) {
     parseError(`This is an eof-in-tag parse error. Emit an end-of-file token.`);
-    return;
   } else {
     currentAttribute.value += c;
     return unQuotedAttributeValue;
@@ -436,12 +423,10 @@ function afterQuotedAttributeValue(c) {
     return data;
   } else if (c === EOF) {
     parseError(`This is an eof-in-tag parse error. Emit an end-of-file token.`);
-    return;
   } else {
     parseError(
       `This is a missing-whitespace-between-attributes parse error. Reconsume in the before attribute name state.`
     );
-    return;
   }
 }
 
@@ -455,12 +440,10 @@ function selfCloseStartTag(c) {
     return data;
   } else if (c === EOF) {
     parseError(`This is an eof-in-tag parse error. Emit an end-of-file token.`);
-    return;
   } else {
     parseError(
       `This is an unexpected-solidus-in-tag parse error. Reconsume in the before attribute name state.`
     );
-    return;
   }
 }
 
